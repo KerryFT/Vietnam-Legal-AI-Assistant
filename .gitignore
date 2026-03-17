@@ -1,0 +1,15 @@
+# Môi trường ảo và rác Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Bảo mật
+.env
+
+# Bỏ qua các file Model học sâu quá nặng (GitHub chỉ cho phép file < 100MB)
+*.pt
+*.bin
+
+# Bỏ qua file Vector DB nếu nó quá lớn
+*.faiss
