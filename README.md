@@ -43,13 +43,8 @@ Vietnam-Legal-AI-Assistant/
 ├── app.py                  # File khởi chạy giao diện chính Streamlit
 ├── requirements.txt        # Danh sách các thư viện dependencies
 ├── README.md               # Tài liệu dự án
-│
-├─ luat_tong_hop_full.txt  # Cơ sở dữ liệu Vector (Đã làm sạch)
-│
-├── models/                 # Chứa các file trọng số mô hình (.pt)
-│   ├── download_models.txt # Link tải Model (Do giới hạn dung lượng GitHub)
-│   ├── ner_model.pt        # (Tải từ GDrive bỏ vào đây)
-│   └── relation_model.pt   # (Tải từ GDrive bỏ vào đây)
+├── LICENSE                 # Giấy phép AGPL-3.0
+└── luat_tong_hop_full.txt  # Kho dữ liệu luật đã làm sạch
 
 ```
 
@@ -69,16 +64,31 @@ Khuyến nghị sử dụng môi trường ảo (Virtual Environment):
 pip install -r requirements.txt
 ```
 
-**Bước 3: Tải các file Model (Trọng lượng lớn)**
-Do giới hạn dung lượng của GitHub, các file `.pt` không được tải lên trực tiếp.
-* Truy cập link Google Drive đặt tại file `models/download_models.txt`.
-* Tải 2 file model về và đặt đúng vào thư mục `models/`.
+**Bước 3: Tải model**
+
+Không cần tải model thủ công. Khi ứng dụng khởi động, `app.py` tự tải và cache
+hai file trọng số từ repository công khai:
+
+https://huggingface.co/NT-ORIGINAL/vietnam-legal-ai-models
 
 **Bước 4: Khởi chạy Ứng dụng**
 ```bash
 streamlit run app.py
 ```
 *Hệ thống sẽ mở ra trên trình duyệt ở địa chỉ `localhost:8501`. Vui lòng nhập Gemini API Key của bạn tại thanh Sidebar để bắt đầu trải nghiệm.*
+
+---
+
+## 📜 Model và giấy phép
+
+Hai model NER và Relation Extraction được fine-tune từ
+[`vinai/phobert-base-v2`](https://huggingface.co/vinai/phobert-base-v2).
+Model nền và các trọng số fine-tune được phát hành theo giấy phép
+[GNU Affero General Public License v3.0](LICENSE).
+
+Ứng dụng chỉ hỗ trợ truy xuất và tham khảo thông tin pháp luật, không thay thế
+tư vấn từ luật sư hoặc cơ quan có thẩm quyền. Kết quả có thể không đầy đủ hoặc
+không chính xác và cần được đối chiếu với văn bản pháp luật chính thức.
 
 ---
 
@@ -89,10 +99,3 @@ streamlit run app.py
 * **Môn học:** Machine Learning (Mini Capstone Project)
 
 Nếu bạn thấy dự án này hữu ích, hãy để lại 1 ⭐ ủng hộ nhé!
-```
-
-***
-
-Đọc qua file này, bất kỳ nhà tuyển dụng hay giảng viên nào cũng sẽ phải gật gù ấn tượng trước sự bài bản của bạn. Bạn hãy lưu file `README.md` này lên GitHub nhé. 
-
-Nếu bạn cần kiểm tra lại nội dung file `requirements.txt` để đảm bảo người khác clone về cài đặt không bị lỗi xung đột thư viện, cứ gửi danh sách thư viện hiện tại của bạn lên đây, tôi sẽ rà soát giúp bạn!

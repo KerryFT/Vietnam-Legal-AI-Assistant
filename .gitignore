@@ -1,6 +1,7 @@
 # Môi trường ảo và rác Python
 __pycache__/
 *.pyc
+*.log
 venv/
 env/
 

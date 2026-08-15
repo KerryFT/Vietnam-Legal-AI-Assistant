@@ -9,7 +9,10 @@ import numpy as np
 import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModel
+from huggingface_hub import hf_hub_download
 import re
+
+HF_MODEL_REPO = "NT-ORIGINAL/vietnam-legal-ai-models"
 # ==========================================
 # 1. CẤU HÌNH GIAO DIỆN (BẮT BUỘC PHẢI Ở DÒNG ĐẦU TIÊN)
 # ==========================================
@@ -74,20 +77,28 @@ def load_all_models():
     tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
     tokenizer.add_special_tokens({'additional_special_tokens': ['<SUBJ>', '<OBJ>']})
     
-    # Load NER (Dùng strict=False để bỏ qua lớp CRF không cần thiết lúc chạy Web)
+    # Tải trọng số công khai từ Hugging Face Hub. hf_hub_download tự cache file.
     ner_model = PhoBERT_NER(num_labels=11).to(device)
-    ner_path = os.path.join(BASE_DIR, "PhoBERT_BiLSTM_CRF_weights.pt")
-    if os.path.exists(ner_path):
-        ner_model.load_state_dict(torch.load(ner_path, map_location=device), strict=False)
-        ner_model.eval()
+    ner_path = hf_hub_download(
+        repo_id=HF_MODEL_REPO,
+        filename="PhoBERT_BiLSTM_CRF_weights.pt",
+    )
+    ner_state_dict = torch.load(ner_path, map_location=device, weights_only=True)
+    ner_model.load_state_dict(ner_state_dict, strict=False)
+    del ner_state_dict
+    ner_model.eval()
     
     # Load Relation
     re_model = RelationModel("vinai/phobert-base-v2").to(device)
     re_model.phobert.resize_token_embeddings(len(tokenizer))
-    re_path = os.path.join(BASE_DIR, "PhoBERT_Relation_Super_Final.pt")
-    if os.path.exists(re_path):
-        re_model.load_state_dict(torch.load(re_path, map_location=device))
-        re_model.eval()
+    re_path = hf_hub_download(
+        repo_id=HF_MODEL_REPO,
+        filename="PhoBERT_Relation_Super_Final.pt",
+    )
+    re_state_dict = torch.load(re_path, map_location=device, weights_only=True)
+    re_model.load_state_dict(re_state_dict)
+    del re_state_dict
+    re_model.eval()
         
     # Load SBERT & FAISS
     try:
